@@ -60,6 +60,33 @@ COURSE_ELECTIVE (
 
 ```
 
+
+## Step by step flow example
+```sql
+INSERT INTO MAJOR (title, aims, opportunities)
+VALUES ('Software Engineering', 'Build skills in software systems', ARRAY['Industry jobs', 'Further studies'])
+RETURNING id;
+
+INSERT INTO PROGRAM (major_id, type, duration_years)
+VALUES (1, 'diploma', 1)
+RETURNING id;
+
+INSERT INTO PROGRAM_YEAR (program_id, year_number)
+VALUES (10, 1)
+RETURNING id;
+
+INSERT INTO SEMESTER (year_id, semester_number)
+VALUES (100, 1)
+RETURNING id;
+
+INSERT INTO COURSE (code, title, description)
+VALUES ('CSSY1208', 'Introduction to Information Security', 'Basics of infosec and security principles')
+RETURNING id;
+
+INSERT INTO SEMESTER_COURSE (semester_id, course_id)
+VALUES (500, 9000);
+```
+
 ## If I want to get all courses in Semester 1 of Software Engineering Diploma:
 
 ```sql

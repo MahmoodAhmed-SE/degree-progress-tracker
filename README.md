@@ -12,9 +12,9 @@ Create an engaging web-based solution that enables UTAS students to track their 
 
 #### Progress Tracking & Planning
 
-- As a student, I want to see my GPA/grades for completed courses, so that I understand my academic standing.
+- As a student, I want to see my GPA/grades for completed courses, so that I understand my academic standing. 💫
 
-- As a student, I want to see a visual progress bar or dashboard, so that I can quickly understand how far I am toward completing my degree.
+- As a student, I want to see a visual progress bar or dashboard, so that I can quickly understand how far I am toward completing my degree. 💫
 
 - As a student, I want to plan my future semesters (e.g., select courses tentatively), so that I can stay on track for graduation.
 
@@ -37,9 +37,12 @@ Create an engaging web-based solution that enables UTAS students to track their 
 
 #### Administrative / System Support
 
+- As a system, I want to be able to lightly scrap specialization program diploma -> adv. diploma -> bachelor (one request each sepecialization year), so that I can take it as a reference for student degree tracking. 💫
+
 - As an administrator, I want to update degree requirements easily, so that the system always reflects the latest curriculum.
 
 - As a system, I want to verify prerequisite completion automatically, so that students cannot enroll incorrectly.
+
 
 
 ### Deliverables:
@@ -48,4 +51,14 @@ Create an engaging web-based solution that enables UTAS students to track their 
 
 - Initial Product Backlog (user stories)
 
-- Prioritization criteria (to be refined in Sprint Planning) 
+- Prioritization criteria (to be refined in Sprint Planning)
+
+
+
+## Backlog Items refinement (prioritization)
+
+- Scrap specialization program diploma -> adv. diploma -> bachelor (one request each sepecialization year) using colly golang external package.
+- Use unidoc/unipdf golang package to read PDF files and calculate GPA/grades for completed courses.
+- Tree-like network of courses that are completed, remaining, unable to take yet because of prerequisite not being taken + info description of each course (if available).
+
+

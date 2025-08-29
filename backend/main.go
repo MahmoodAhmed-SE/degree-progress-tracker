@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/MahmoodAhmed-SE/degree-progress-tracker/api"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly/v2"
 )
@@ -18,6 +19,8 @@ type course struct {
 }
 
 func main() {
+	api.Init()
+
 	var c *colly.Collector = colly.NewCollector()
 
 	sites := []string{

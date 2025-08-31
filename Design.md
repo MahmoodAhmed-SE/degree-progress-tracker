@@ -1,4 +1,7 @@
 # Schema Design
+
+## postgres sql
+
 ```sql
 MAJOR (
     id SERIAL PRIMARY KEY,
@@ -60,8 +63,8 @@ COURSE_ELECTIVE (
 
 ```
 
-
 ## Step by step flow example
+
 ```sql
 INSERT INTO MAJOR (title, aims, opportunities)
 VALUES ('Software Engineering', 'Build skills in software systems', ARRAY['Industry jobs', 'Further studies'])
@@ -87,7 +90,7 @@ INSERT INTO SEMESTER_COURSE (semester_id, course_id)
 VALUES (500, 9000);
 ```
 
-## If I want to get all courses in Semester 1 of Software Engineering Diploma:
+## If I want to get all courses in Semester 1 of Software Engineering Diploma
 
 ```sql
 SELECT c.code, c.title

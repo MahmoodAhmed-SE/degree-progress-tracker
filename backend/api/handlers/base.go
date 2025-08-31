@@ -5,17 +5,15 @@ import "github.com/gin-gonic/gin"
 type Route struct {
 	Method      string
 	Path        string
-	Name        string
 	HandlerFunc gin.HandlerFunc
 }
 
 var Routes []Route
 
-func AddRoute(name, method, path string, handler gin.HandlerFunc, roles ...string) {
+func AddRoute(method, path string, handler gin.HandlerFunc, roles ...string) {
 	Routes = append(Routes, Route{
 		Method:      method,
 		Path:        path,
-		Name:        name,
 		HandlerFunc: handler,
 	})
 }

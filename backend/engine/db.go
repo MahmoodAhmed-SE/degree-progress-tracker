@@ -39,4 +39,5 @@ func InitDB() {
 		log.Fatalf("Unable to create connection pool: %v\n", err)
 	}
 	PgxDB = connPool
+	log.Println("Database connected successfully")
 }

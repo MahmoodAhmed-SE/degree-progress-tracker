@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"slices"
 
@@ -23,24 +24,37 @@ func Authenticate(next gin.HandlerFunc, allowed []string) gin.HandlerFunc {
 			authHeader = fmt.Sprintf("Bearer %v", token)
 		}
 		tokenString := authHeader[len("Bearer "):]
-		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				return nil, fmt.Errorf("unexpected signing method: %v")
+				return nil, fmt.Errorf("unexpected signing method")
 			}
-			// if you want to add an audience
-			// and issuer too
+			iss := "degree-progress-tracker"
+			if !token.Claims.(jwt.MapClaims).VerifyIssuer(iss, true) {
+				log.Println("Invalid issuer")
+				return nil, fmt.Errorf("invalid issuer")
+			}
+			aud := "degree-progress-tracker"
+			if !token.Claims.(jwt.MapClaims).VerifyAudience(aud, true) {
+				log.Println("Invalid audience")
+				return nil, fmt.Errorf("invalid audience")
+			}
 			return secret, nil
 		})
+		log.Println("Token claims:", token.Claims)
 		if err != nil || !token.Valid {
+			log.Println("Invalid token:", err)
 			schemas.ErrorResponse(ctx, 401, "Unauthorized")
 			return
 		}
 		info := token.Claims.(jwt.MapClaims)
-		currentUserRoles := make([]string, len(info["roles"].([]any)))
-		for i, r := range info["roles"].([]any) {
-			currentUserRoles[i] = r.(string)
+
+		var currentUserRoles []string
+		if info["roles"] != nil {
+			for _, r := range info["roles"].([]any) {
+				currentUserRoles = append(currentUserRoles, r.(string))
+			}
 		}
-		userID := int(info["id"].(float64))
+		userID := int(info["user_id"].(float64))
 		user := models.User{
 			ID:          userID,
 			Username:    info["username"].(string),

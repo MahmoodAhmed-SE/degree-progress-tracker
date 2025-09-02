@@ -48,15 +48,35 @@ CREATE TABLE IF NOT EXISTS SEMESTER_COURSE (
 );
 
 -- Junction: prerequisites (self-referencing many-to-many)
-CREATE TABLE IF NOT EXISTS COURSE_PREREQUISITE (
-    course_id INT REFERENCES COURSE(id) ON DELETE CASCADE,
-    prereq_id INT REFERENCES COURSE(id) ON DELETE CASCADE,
-    PRIMARY KEY (course_id, prereq_id)
+
+/*
+    this is so that when we have course 1 and prerequistes are course 2 and course 3 we make
+    2 groups with one option each.
+    BUT, if we have course 1 and prerequistes are course 2 OR course 3 we make
+    1 group with 2 options (2 and 3)
+*/ 
+CREATE TABLE COURSE_PREREQ_GROUP (
+    id SERIAL PRIMARY KEY,
+    course_id INT REFERENCES COURSE(id) ON DELETE CASCADE
 );
 
+CREATE TABLE COURSE_PREREQ_OPTION (
+    group_id INT REFERENCES COURSE_PREREQ_GROUP(id) ON DELETE CASCADE,
+    prereq_id INT REFERENCES COURSE(id) ON DELETE CASCADE,
+    PRIMARY KEY (group_id, prereq_id)
+);
+
+
 -- Junction: electives
-CREATE TABLE IF NOT EXISTS COURSE_ELECTIVE (
-    course_id INT REFERENCES COURSE(id) ON DELETE CASCADE,
-    elective_id INT REFERENCES COURSE(id) ON DELETE CASCADE,
-    PRIMARY KEY (course_id, elective_id)
+CREATE TABLE IF NOT EXISTS SEMESTER_ELECTIVE (
+    id SERIAL PRIMARY KEY,
+    semester_id INT REFERENCES SEMESTER(id) ON DELETE CASCADE,
+    title TEXT
+);
+
+
+CREATE TABLE IF NOT EXISTS SEMESTER_ELECTIVE_COURSE (
+    semester_elective_id INT REFERENCES SEMESTER_ELECTIVE(id) ON DELETE CASCADE,
+    elective_course INT REFERENCES COURSE(id) ON DELETE CASCADE,
+    PRIMARY KEY (semester_elective_id, elective_course)
 );

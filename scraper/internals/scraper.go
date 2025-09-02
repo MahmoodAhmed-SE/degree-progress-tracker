@@ -1,4 +1,4 @@
-package scraper
+package internals
 
 import (
 	"fmt"
@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/MahmoodAhmed-SE/degree-progress-tracker/scraper/internals/models"
+	"github.com/MahmoodAhmed-SE/degree-progress-tracker/scraper/internals/repositories"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly/v2"
 )
@@ -40,21 +42,64 @@ func ScrapeMajors() {
 				majorOpportunities = append(majorOpportunities, strings.TrimSpace(career.Text()))
 			}
 		})
-		log.Println(majorTitle)
-		log.Println(majorAim)
-		log.Println(majorOpportunities)
+
+		major := models.Major{
+			Title:         majorTitle,
+			Aim:           majorAim,
+			Opportunities: majorOpportunities,
+		}
+
+		majorId, err := repositories.NewMajor(major)
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
 		// **** supporting bachelor only for now. ****
-		// programType := "bachelor"
+		programType := "bachelor"
 		programDuration := 4 // years
 
-		for i := 1; i <= programDuration; i++ {
-			year := fmt.Sprintf("year%d", i)
-			h.DOM.Find(fmt.Sprintf("#%s div", year)).
+		program := models.Program{
+			MajorId:  majorId,
+			Type:     programType,
+			Duration: programDuration,
+		}
+
+		programId, err := repositories.NewProgram(program)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		for year := 1; year <= programDuration; year++ {
+			programYear := models.ProgramYear{
+				ProgramId:  programId,
+				YearNumber: year,
+			}
+
+			programYearId, err := repositories.NewProgramYear(programYear)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+
+			h.DOM.Find(fmt.Sprintf("#year%d div", year)).
 				First().
 				Children().
 				Each(func(i int, s *goquery.Selection) {
-					semester := i + 1
+					semester := models.Semester{
+						YearId:         programYearId,
+						SemesterNumber: i + 1,
+					}
+
+					semesterId, err := repositories.NewSemester(semester)
+					if err != nil {
+						log.Println(err)
+						return
+					}
+
+					// TO-DO: handle the prerequisites (ea. (pre 1 + pre 2) (pre 1 + pre 2 or pre 3))
+
 					var courses []course
 
 					elective := false

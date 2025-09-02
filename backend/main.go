@@ -1,10 +1,9 @@
 package main
 
 import (
-	"github.com/MahmoodAhmed-SE/degree-progress-tracker/scraper"
+	"github.com/MahmoodAhmed-SE/degree-progress-tracker/api"
 )
 
 func main() {
-	scraper.ScrapeMajors()
-	// api.Init()
+	api.Init()
 }
